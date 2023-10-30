@@ -8,6 +8,11 @@ import (
 	"net/http"
 )
 
+/*
+Basicamente no URI temos os parametros que são definidos via localhost:5000/usuarios/{parametro},
+e também temos as query que são definidas via localhost:5000/usuarios?usuario=Fernando
+*/
+
 func main() {
 
 	config.Carregar()

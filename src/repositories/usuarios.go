@@ -3,6 +3,7 @@ package repositories
 import (
 	"api/src/modelos"
 	"database/sql"
+	"fmt"
 )
 
 type usuarios struct {
@@ -36,4 +37,55 @@ func (repository usuarios) Criar(usuario modelos.Usuario) (uint64, error) {
 	}
 
 	return uint64(id), nil
+}
+
+func (repository usuarios) Buscar(nomeOuNick string) ([]modelos.Usuario, error) {
+
+	nomeOuNick = fmt.Sprintf("%%%s%%", nomeOuNick)
+
+	linhas, erro := repository.db.Query("SELECT * FROM usuarios WHERE name LIKE(?) OR nick LIKE(?);", nomeOuNick, nomeOuNick)
+
+	if erro != nil {
+		return nil, erro
+	}
+
+	defer linhas.Close()
+
+	var usuarios []modelos.Usuario
+
+	for linhas.Next() {
+
+		var usuario modelos.Usuario
+
+		if erro = linhas.Scan(&usuario.ID, &usuario.Nome, &usuario.Nick, &usuario.Email, &usuario.Senha, &usuario.CriadoEm); erro != nil {
+			return nil, erro
+		}
+
+		usuarios = append(usuarios, usuario)
+	}
+
+	return usuarios, nil
+}
+
+func (repository usuarios) BuscarPorID(usuarioId uint64) (modelos.Usuario, error) {
+
+	linha, erro := repository.db.Query("SELECT * FROM usuarios WHERE id=? LIMIT 1;", usuarioId)
+
+	if erro != nil {
+		return modelos.Usuario{}, erro
+	}
+
+	defer linha.Close()
+
+	var usuario modelos.Usuario
+
+	if linha.Next() {
+
+		if erro = linha.Scan(&usuario.ID, &usuario.Nome, &usuario.Nick, &usuario.Email, &usuario.Senha, &usuario.CriadoEm); erro != nil {
+			return modelos.Usuario{}, erro
+		}
+
+	}
+
+	return usuario, nil
 }
