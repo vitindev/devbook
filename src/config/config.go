@@ -11,7 +11,10 @@ import (
 
 var (
 	StringConexaoBanco = ""
-	Porta              = 0
+	//	Porta onde a API vai estar rodando
+	Porta = 0
+	//	É a chave que vai ser usada para assinar o Token
+	SecretKey []byte
 )
 
 func Carregar() {
@@ -36,5 +39,7 @@ func Carregar() {
 
 	fmt.Println("Porta configurada:", Porta)
 	fmt.Println("Url DB:", StringConexaoBanco)
+
+	SecretKey = []byte(os.Getenv("SECRET_KEY"))
 
 }

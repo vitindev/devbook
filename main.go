@@ -13,6 +13,24 @@ Basicamente no URI temos os parametros que são definidos via localhost:5000/usu
 e também temos as query que são definidas via localhost:5000/usuarios?usuario=Fernando
 */
 
+/*
+
+Gerando uma SECRET KEY simples:
+
+func init() {
+
+	chave := make([]byte, 64)
+
+	if _, erro := rand.Read(chave); erro != nil {
+		log.Fatal(erro)
+	}
+
+	stringBase64 := base64.StdEncoding.EncodeToString(chave)
+	fmt.Println(stringBase64)
+
+}
+*/
+
 func main() {
 
 	config.Carregar()
