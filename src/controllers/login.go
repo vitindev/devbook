@@ -1,12 +1,14 @@
 package controllers
 
 import (
+	"api/src/autenticacao"
 	"api/src/database"
 	"api/src/modelos"
 	"api/src/repositories"
 	"api/src/responses"
 	"api/src/seguranca"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -49,12 +51,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// token, erro := autenticacao.CriarToken(usuarioSalvoNoBanco.ID)
+	token, erro := autenticacao.CriarToken(usuarioSalvoNoBanco.ID)
 
-	// if erro != nil {
-	// 	responses.Erro(w, http.StatusUnauthorized, erro)
-	// 	return
-	// }
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
 
+	fmt.Println(token)
 	w.Write([]byte("Você está logado! Parabéns!"))
 }
