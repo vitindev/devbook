@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"api/src/autenticacao"
 	"api/src/database"
 	"api/src/modelos"
 	"api/src/repositories"
@@ -115,6 +116,18 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 
 	if erro != nil {
 		responses.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	usuarioIdToken, erro := autenticacao.ExtrairUsuarioID(r)
+
+	if erro != nil {
+		responses.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	if usuarioIdToken != usuarioId {
+		responses.Erro(w, http.StatusForbidden, erro)
 		return
 	}
 
